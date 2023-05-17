@@ -15,6 +15,13 @@ class Init {
 	/**
 	 * Setup Topic taxonomy
 	 *
+	 * @var Topic
+	 */
+	public $topic;
+
+	/**
+	 * Setup Type taxonomy
+	 *
 	 * @var Type
 	 */
 	public $type;
@@ -69,7 +76,7 @@ class Init {
 	 * @author Tanner Moushey
 	 */
 	public function get_objects() {
-		return [ $this->type ];
+		return [ $this->topic, $this->type ];
 	}
 
 	/**
@@ -92,8 +99,10 @@ class Init {
 
 	public function register_taxonomies() {
 
-		$this->type = Type::get_instance();
+		$this->topic = Topic::get_instance();
+		$this->topic->add_actions();
 
+		$this->type = Type::get_instance();
 		$this->type->add_actions();
 
 		do_action( 'cp_register_taxonomies' );

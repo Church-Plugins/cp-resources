@@ -1,0 +1,7 @@
+body:not(.is-resource) {
+	#cp_resource_topic_data,
+	#cp_resource_type_data,
+	.cmb2-id--hide-resource {
+		display: none;
+	}
+}

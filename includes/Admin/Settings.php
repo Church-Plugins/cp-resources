@@ -2,8 +2,6 @@
 
 namespace CP_Resources\Admin;
 
-use CP_Resources\Models\ServiceType;
-
 /**
  * Plugin settings
  *
@@ -40,7 +38,7 @@ class Settings {
 	 *
 	 * @author Tanner Moushey
 	 */
-	public static function get( $key, $default = '', $group = 'cpl_main_options' ) {
+	public static function get( $key, $default = '', $group = 'cp_resources_main_options' ) {
 		$options = get_option( $group, [] );
 
 		if ( isset( $options[ $key ] ) ) {
@@ -49,7 +47,7 @@ class Settings {
 			$value = $default;
 		}
 
-		return apply_filters( 'cpl_settings_get', $value, $key, $group );
+		return apply_filters( 'cp_resources_settings_get', $value, $key, $group );
 	}
 
 	/**
@@ -76,13 +74,14 @@ class Settings {
 	 *
 	 */
 	protected function __construct() {
-//		add_action( 'cmb2_admin_init', [ $this, 'register_main_options_metabox' ] );
+		add_action( 'cmb2_admin_init', [ $this, 'register_main_options_metabox' ] );
 //		add_action( 'cmb2_save_options_page_fields', 'flush_rewrite_rules' );
 	}
 
 	public function register_main_options_metabox() {
 
 		$post_type = cp_resources()->setup->post_types->resource->post_type;
+
 		/**
 		 * Registers main options page menu item and form.
 		 */
@@ -90,8 +89,8 @@ class Settings {
 			'id'           => 'cp_resources_options_page',
 			'title'        => 'Settings',
 			'object_types' => array( 'options-page' ),
-			'option_key'   => 'cpl_main_options',
-			'tab_group'    => 'cpl_main_options',
+			'option_key'   => 'cp_resources_main_options',
+			'tab_group'    => 'cp_resources_main_options',
 			'tab_title'    => 'Main',
 			'parent_slug'  => 'edit.php?post_type=' . $post_type,
 			'display_cb'   => [ $this, 'options_display_with_tabs'],
@@ -99,73 +98,50 @@ class Settings {
 
 		$main_options = new_cmb2_box( $args );
 
-		/**
-		 * Options fields ids only need
-		 * to be unique within this box.
-		 * Prefix is not needed.
-		 */
+
+		$objects = get_post_types( apply_filters( 'cp_resource_objects_args', [ 'public' => true ] ), 'objects' );
+		$objects = wp_list_pluck( $objects, 'label', 'name' );
+
+		// don't include Media or Resources (Resources are always enabled)
+		unset( $objects['attachment'] );
+		unset( $objects[ $post_type ] );
+
 		$main_options->add_field( array(
-			'name'    => __( 'Primary Color', 'cp-resources' ),
-			'desc'    => __( 'The primary color to use in the templates.', 'cp-resources' ),
-			'id'      => 'color_primary',
-			'type'    => 'colorpicker',
-			'default' => '#333333',
+			'name'    => sprintf( __( '%s Objects', 'cp-resources' ), cp_resources()->setup->post_types->resource->plural_label ),
+			'desc'    => sprintf( __( 'Specify the objects that can be tagged as a %s.', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label ),
+			'id'      => 'resource_objects',
+			'type'    => 'pw_multiselect',
+			'options' => $objects,
 		) );
 
 		$main_options->add_field( array(
-			'name'         => __( 'Site Logo', 'cp-resources' ),
-			'desc'         => sprintf( __( 'The logo to use for %s.', 'cp-resources' ), cp_resources()->setup->post_types->item->plural_label ),
-			'id'           => 'logo',
-			'type'         => 'file',
-			// query_args are passed to wp.media's library query.
-			'query_args'   => array(
-				// Or only allow gif, jpg, or png images
-				 'type' => array(
-				     'image/gif',
-				     'image/jpeg',
-				     'image/png',
-				 ),
-			),
-			'preview_size' => 'thumbnail', // Image size to use when previewing in the admin
+			'name'    => sprintf( __( 'Objects with %s', 'cp-resources' ), cp_resources()->setup->post_types->resource->plural_label ),
+			'desc'    => sprintf( __( 'Specify the objects that can be assigned a %s.', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label ),
+			'id'      => 'has_resources',
+			'type'    => 'pw_multiselect',
+			'options' => $objects,
 		) );
 
-		$main_options->add_field( array(
-			'name'         => __( 'Default Thumbnail', 'cp-resources' ),
-			'desc'         => sprintf( __( 'The default thumbnail image to use for %s.', 'cp-resources' ), cp_resources()->setup->post_types->item->plural_label ),
-			'id'           => 'default_thumbnail',
-			'type'         => 'file',
-			// query_args are passed to wp.media's library query.
-			'query_args'   => array(
-				// Or only allow gif, jpg, or png images
-				 'type' => array(
-				     'image/gif',
-				     'image/jpeg',
-				     'image/png',
-				 ),
-			),
-			'preview_size' => 'medium', // Image size to use when previewing in the admin
-		) );
+//		$this->item_options();
+//		$this->advanced_options();
 
-		$this->item_options();
-
-		$this->advanced_options();
 		$this->license_fields();
 
 	}
 
 	protected function license_fields() {
-		$license = new \ChurchPlugins\Setup\Admin\License( 'cpl_license', 436, CP_RESOURCES_STORE_URL, CP_RESOURCES_PLUGIN_FILE, get_admin_url( null, 'admin.php?page=cpl_license' ) );
+		$license = new \ChurchPlugins\Setup\Admin\License( 'cp_resources_license', 436, CP_RESOURCES_STORE_URL, CP_RESOURCES_PLUGIN_FILE, get_admin_url( null, 'admin.php?page=cp_resources_license' ) );
 
 		/**
 		 * Registers settings page, and set main item as parent.
 		 */
 		$args = array(
-			'id'           => 'cpl_options_page',
+			'id'           => 'cp_resources_license_page',
 			'title'        => 'CP Resources Settings',
 			'object_types' => array( 'options-page' ),
-			'option_key'   => 'cpl_license',
-			'parent_slug'  => 'cpl_main_options',
-			'tab_group'    => 'cpl_main_options',
+			'option_key'   => 'cp_resources_license',
+			'parent_slug'  => 'cp_resources_main_options',
+			'tab_group'    => 'cp_resources_main_options',
 			'tab_title'    => 'License',
 			'display_cb'   => [ $this, 'options_display_with_tabs' ]
 		);
@@ -180,12 +156,12 @@ class Settings {
 		 * Registers secondary options page, and set main item as parent.
 		 */
 		$args = array(
-			'id'           => 'cpl_item_options_page',
+			'id'           => 'cp_resources_item_options_page',
 			'title'        => 'Settings',
 			'object_types' => array( 'options-page' ),
-			'option_key'   => 'cpl_item_options',
-			'parent_slug'  => 'cpl_main_options',
-			'tab_group'    => 'cpl_main_options',
+			'option_key'   => 'cp_resources_item_options',
+			'parent_slug'  => 'cp_resources_main_options',
+			'tab_group'    => 'cp_resources_main_options',
 			'tab_title'    => cp_resources()->setup->post_types->item->plural_label,
 			'display_cb'   => [ $this, 'options_display_with_tabs' ],
 		);
@@ -222,163 +198,17 @@ class Settings {
 
 	}
 
-	protected function item_type_options() {
-		/**
-		 * Registers secondary options page, and set main item as parent.
-		 */
-		$args = array(
-			'id'           => 'cpl_item_type_options_page',
-			'title'        => 'Settings',
-			'object_types' => array( 'options-page' ),
-			'option_key'   => 'cpl_item_type_options',
-			'parent_slug'  => 'cpl_main_options',
-			'tab_group'    => 'cpl_main_options',
-			'tab_title'    => cp_resources()->setup->post_types->item_type->plural_label,
-			'display_cb'   => [ $this, 'options_display_with_tabs' ],
-		);
-
-		$options = new_cmb2_box( $args );
-
-		$options->add_field( array(
-			'name' => __( 'Labels' ),
-			'id'   => 'labels',
-			'type' => 'title',
-		) );
-
-		$options->add_field( array(
-			'name'    => __( 'Singular Label', 'cp-resources' ),
-			'id'      => 'singular_label',
-			'type'    => 'text',
-			'default' => cp_resources()->setup->post_types->item_type->single_label,
-		) );
-
-		$options->add_field( array(
-			'name'    => __( 'Plural Label', 'cp-resources' ),
-			'id'      => 'plural_label',
-			'type'    => 'text',
-			'default' => cp_resources()->setup->post_types->item_type->plural_label,
-		) );
-
-		$options->add_field( array(
-			'name'    => __( 'Slug', 'cp-resources' ),
-			'id'      => 'slug',
-			'desc'    => __( 'Caution: changing this value will also adjust the url structure and may affect your SEO.', 'cp-resources' ),
-			'type'    => 'text',
-			'default' => strtolower( sanitize_title( cp_resources()->setup->post_types->item_type->plural_label ) ),
-		) );
-
-	}
-
-	protected function speaker_options() {
-		/**
-		 * Registers secondary options page, and set main item as parent.
-		 */
-		$args = array(
-			'id'           => 'cpl_speaker_options_page',
-			'title'        => 'Settings',
-			'object_types' => array( 'options-page' ),
-			'option_key'   => 'cpl_speaker_options',
-			'parent_slug'  => 'cpl_main_options',
-			'tab_group'    => 'cpl_main_options',
-			'tab_title'    => cp_resources()->setup->post_types->speaker->plural_label,
-			'display_cb'   => [ $this, 'options_display_with_tabs' ],
-		);
-
-		$options = new_cmb2_box( $args );
-
-		$options->add_field( array(
-			'name' => __( 'Labels' ),
-			'id'   => 'labels',
-			'type' => 'title',
-		) );
-
-		$options->add_field( array(
-			'name'    => __( 'Singular Label', 'cp-resources' ),
-			'id'      => 'singular_label',
-			'type'    => 'text',
-			'default' => cp_resources()->setup->post_types->speaker->single_label,
-		) );
-
-		$options->add_field( array(
-			'name'    => __( 'Plural Label', 'cp-resources' ),
-			'desc'    => __( 'Caution: changing this value will also adjust the url structure and may affect your SEO.', 'cp-resources' ),
-			'id'      => 'plural_label',
-			'type'    => 'text',
-			'default' => cp_resources()->setup->post_types->speaker->plural_label,
-		) );
-
-	}
-
-	protected function service_type_options() {
-		/**
-		 * Registers secondary options page, and set main item as parent.
-		 */
-		$args = array(
-			'id'           => 'cpl_service_type_options_page',
-			'title'        => 'Settings',
-			'object_types' => array( 'options-page' ),
-			'option_key'   => 'cpl_service_type_options',
-			'parent_slug'  => 'cpl_main_options',
-			'tab_group'    => 'cpl_main_options',
-			'tab_title'    => cp_resources()->setup->post_types->service_type->plural_label,
-			'display_cb'   => [ $this, 'options_display_with_tabs' ],
-		);
-
-		$options = new_cmb2_box( $args );
-
-		$options->add_field( array(
-			'name' => __( 'Labels' ),
-			'id'   => 'labels',
-			'type' => 'title',
-		) );
-
-		$options->add_field( array(
-			'name'    => __( 'Singular Label', 'cp-resources' ),
-			'id'      => 'singular_label',
-			'type'    => 'text',
-			'default' => cp_resources()->setup->post_types->service_type->single_label,
-		) );
-
-		$options->add_field( array(
-			'name'    => __( 'Plural Label', 'cp-resources' ),
-			'id'      => 'plural_label',
-			'type'    => 'text',
-			'default' => cp_resources()->setup->post_types->service_type->plural_label,
-		) );
-
-		$service_types = ServiceType::get_all_service_types();
-
-		if ( empty( $service_types ) ) {
-			$options->add_field( [
-				'desc' => sprintf( __( 'No %s have been created yet. <a href="%s">Create one here.</a>', 'cp-resources' ), cp_resources()->setup->post_types->service_type->plural_label, add_query_arg( [ 'post_type' => cp_resources()->setup->post_types->service_type->post_type ], admin_url( 'post-new.php' ) )  ),
-				'type' => 'title',
-				'id' => 'cpl_no_service_types',
-			] );
-		} else {
-			$service_types = array_combine( wp_list_pluck( $service_types, 'id' ), wp_list_pluck( $service_types, 'title' ) );
-
-			$options->add_field( array(
-				'name'             => __( 'Default Service Type', 'cp-resources' ),
-				'id'               => 'default_service_type',
-				'type'             => 'select',
-				'show_option_none' => true,
-				'options'          => $service_types,
-			) );
-		}
-
-	}
-
 	protected function advanced_options() {
 		/**
 		 * Registers secondary options page, and set main item as parent.
 		 */
 		$args = array(
-			'id'           => 'cpl_advanced_options_page',
+			'id'           => 'cp_resources_advanced_options_page',
 			'title'        => 'Settings',
 			'object_types' => array( 'options-page' ),
-			'option_key'   => 'cpl_advanced_options',
-			'parent_slug'  => 'cpl_main_options',
-			'tab_group'    => 'cpl_main_options',
+			'option_key'   => 'cp_resources_advanced_options',
+			'parent_slug'  => 'cp_resources_main_options',
+			'tab_group'    => 'cp_resources_main_options',
 			'tab_title'    => 'Advanced',
 			'display_cb'   => [ $this, 'options_display_with_tabs' ],
 		);

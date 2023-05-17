@@ -31,6 +31,11 @@ class Init {
 	 */
 	public $admin;
 
+	/**
+	 * @var Templates
+	 */
+	public $templates;
+
 	public $enqueue;
 
 	/**
@@ -83,8 +88,8 @@ class Init {
 		$this->api   = API\Init::get_instance();
 
 		$this->admin = Admin\Init::get_instance();
+		$this->templates = Templates::get_instance();
 		Download::get_instance();
-		Templates::init();
 	}
 
 	/**
@@ -123,10 +128,6 @@ class Init {
 	}
 
 	public function admin_scripts() {
-		if ( ! $this->is_admin_page() ) {
-			return;
-		}
-
 		$this->enqueue->enqueue( 'styles', 'admin', [] );
 		$this->enqueue->enqueue( 'scripts', 'admin', [] );
 	}
