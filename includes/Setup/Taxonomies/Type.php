@@ -30,10 +30,25 @@ class Type extends Taxonomy  {
 		parent::__construct();
 	}
 
+	public function add_actions() {
+		parent::add_actions();
+
+		add_filter( "{$this->taxonomy}_metabox_field_args", [ $this, 'field_args' ] );
+	}
+
 	public function get_args() {
 		$args = parent::get_args();
 
 		$args['show_ui'] = true;
+
+		return $args;
+	}
+
+	public function field_args( $args ) {
+		$args['attributes'] = [
+			'placeholder'                   => sprintf( __( 'Select a %s', 'cp-resources' ), $this->single_label ),
+			'data-maximum-selection-length' => '1',
+		];
 
 		return $args;
 	}

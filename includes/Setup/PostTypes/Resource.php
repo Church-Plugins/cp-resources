@@ -92,6 +92,8 @@ class Resource extends PostType  {
 			'id'   => 'resource_url',
 			'type' => 'file',
 		] );
+
+		cp_resources()->setup::visibility_field( $cmb );
 	}
 
 }
