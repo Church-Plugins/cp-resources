@@ -48,7 +48,7 @@ class Resource extends Table  {
 			`updated` datetime NOT NULL,
 			PRIMARY KEY  (`id`),
 			KEY `idx_origin_id` (`origin_id`),
-			KEY `idx_status` (`status`)
+			KEY `idx_status` (`status`),
 			KEY `idx_hide_archive` (`hide_archive`)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
