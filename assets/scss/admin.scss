@@ -5,3 +5,7 @@ body:not(.is-resource) {
 		display: none;
 	}
 }
+
+#adminmenu .menu-top:not(.menu-icon-cp_resource) a[href*='cp_resource_type'] {
+	display: none;
+}

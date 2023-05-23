@@ -1,0 +1,30 @@
+.cp-resources-widget {
+	--cp-resources-widget-list--margin: 0 0 0 var(--cp-gap--md);
+	--cp-resources-widget-list--width: 18rem;
+	--cp-resources-widget-list--item-background: var(--cp-color-ui-inverted-light);
+	--cp-resources-widget-list--item-color: var(--cp-color-text-primary);
+	--cp-resources-widget-list--item-background--hover: var(--cp-color-ui-secondary);
+	--cp-resources-widget-list--item-color--hover: var(--cp-color-text-inverted);
+	--cp-resources-widget-list--item-padding: var(--cp-gap-base);
+	--cp-resources-widget-list--item-margin: 0 0 var(--cp-gap-base);
+
+	margin: var(--cp-resources-widget-list--margin);
+
+	.cp-resources-list {
+		max-width: var( --cp-resources-widget-list--width );
+
+		&--resource {
+			a {
+				display: block;
+				background: var(--cp-resources-widget-list--item-background);
+				padding: var(--cp-resources-widget-list--item-padding);
+				margin: var(--cp-resources-widget-list--item-margin);
+
+				&:hover {
+					background: var(--cp-resources-widget-list--item-background--hover);
+					color: var(--cp-resources-widget-list--item-color--hover);
+				}
+			}
+		}
+	}
+}

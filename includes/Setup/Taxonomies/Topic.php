@@ -26,6 +26,9 @@ class Topic extends Taxonomy  {
 		$this->single_label = apply_filters( "{$this->taxonomy}_single_label", 'Resource Topic' );
 		$this->plural_label = apply_filters( "{$this->taxonomy}_plural_label", 'Resource Topics' );
 
+		// put our metaboxes above the others
+		$this->metabox_priority = 8;
+
 		parent::__construct();
 	}
 

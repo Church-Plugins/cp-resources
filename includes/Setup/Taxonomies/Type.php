@@ -1,6 +1,7 @@
 <?php
 namespace CP_Resources\Setup\Taxonomies;
 
+use ChurchPlugins\Helpers;
 use CP_Resources\Admin\Settings;
 use CP_Resources\Templates;
 use ChurchPlugins\Setup\Taxonomies\Taxonomy;
@@ -27,7 +28,14 @@ class Type extends Taxonomy  {
 		$this->single_label = apply_filters( "{$this->taxonomy}_single_label", 'Resource Type' );
 		$this->plural_label = apply_filters( "{$this->taxonomy}_plural_label", 'Resource Types' );
 
+		// put our metaboxes above the others
+		$this->metabox_priority = 8;
+
 		parent::__construct();
+	}
+
+	public function get_edit_url() {
+		return admin_url( sprintf( 'edit-tags.php?taxonomy=%s&post_type=%s', $this->taxonomy, cp_resources()->setup->post_types->resource->post_type ) );
 	}
 
 	public function add_actions() {
@@ -37,9 +45,14 @@ class Type extends Taxonomy  {
 	}
 
 	public function get_args() {
-		$args = parent::get_args();
+		global $current_page;
 
-		$args['show_ui'] = true;
+		$args = parent::get_args();
+		$args['show_ui'] = false;
+
+		if ( $this->taxonomy == Helpers::get_request( 'taxonomy' ) ) {
+			$args['show_ui'] = true;
+		}
 
 		return $args;
 	}
@@ -122,7 +135,21 @@ class Type extends Taxonomy  {
 
 		$cmb = new_cmb2_box( $args );
 
-		$cmb->add_field( apply_filters( "{$this->taxonomy}_metabox_field_args", [
+		$cmb->add_field( apply_filters( "{$this->taxonomy}_term_metabox_field_args", [
+			'name'       => __( 'Thumbnail', 'cp-resources' ), // sprintf( , $this->plural_label ),
+			'id'         => $this->taxonomy . '_thumbnail',
+			'desc'       => sprintf( __( 'The thumbnail to use for %s using this Type.', 'cp-resources' ), cp_resources()->setup->post_types->resource->plural_label ),
+			'type'       => 'file',
+			'query_args' => array(
+				'type' => array(
+					'image/gif',
+					'image/jpeg',
+					'image/png',
+				),
+			),
+		], $this ) );
+
+		$cmb->add_field( apply_filters( "{$this->taxonomy}_term_metabox_field_args", [
 			'name'    => __( 'Visibility', 'cp-resources' ), // sprintf( , $this->plural_label ),
 			'id'      => $this->taxonomy . '_visibility',
 			'desc'    => __( 'Define whether or not resources in this Type should show up in the Resources archive.', 'cp-resources' ),

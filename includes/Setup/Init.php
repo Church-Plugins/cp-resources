@@ -75,6 +75,7 @@ class Init {
 	}
 
 	protected function actions() {
+		add_filter( 'the_content', [ $this, 'output_resources' ], 99 );
 		add_action( 'cmb2_admin_init', [ $this, 'register_metaboxes' ], 5 );
 		add_filter( 'cmb2_override_meta_save', [ $this, 'meta_save_override' ], 10, 4 );
 		add_filter( 'cmb2_override_meta_remove', [ $this, 'meta_save_override' ], 10, 4 );
@@ -84,6 +85,32 @@ class Init {
 	}
 
 	/** Actions ***************************************************/
+
+	public function output_resources( $content ) {
+		$resource_objects = Settings::get( 'has_resources' );
+
+		if ( ! is_singular( $resource_objects ) ) {
+			return $content;
+		}
+
+		if ( get_the_ID() != get_queried_object_id() ) {
+			return $content;
+		}
+
+		$post_type = get_post_type();
+		$display_setting = Settings::get( 'resource_display_' . $post_type, 'before_content' );
+
+		if ( ! in_array( $display_setting, [ 'before_content', 'after_content' ] ) ) {
+			return $content;
+		}
+
+		$shortcode = do_shortcode( '[item-resources id=' . get_the_ID() . ']' );
+		if ( 'before_content' == $display_setting ) {
+			return $shortcode . $content;
+		} else {
+			return $content . $shortcode;
+		}
+	}
 
 	/**
 	 * Register metaboxes
@@ -108,7 +135,6 @@ class Init {
 	 */
 	protected function resource_object_meta() {
 		$resource_objects   = Settings::get( 'resource_objects', [] );
-		$resource_objects[] = cp_resources()->setup->post_types->resource->post_type;
 
 		$args = apply_filters( "cp_resources_is_resource_metabox_args", [
 			'id'           => 'resource_set',
@@ -199,11 +225,15 @@ class Init {
 		] );
 
 		$cmb->add_group_field( $group_field_id, [
-			'name' => 'Type',
-			'id'   => 'type',
-			'desc' => sprintf( __( 'The Type for this %s.', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label ),
-			'type' => 'pw_multiselect',
-			'options' => cp_resources()->setup->taxonomies->type->get_terms_for_metabox(),
+			'name'       => 'Type',
+			'id'         => 'type',
+			'desc'       => sprintf( __( 'The %2$s for this %1$s. <a href="%3$s" target="_blank">Click here to add a new %2$s.</a>', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label, cp_resources()->setup->taxonomies->type->single_label, cp_resources()->setup->taxonomies->type->get_edit_url() ),
+			'type'       => 'pw_multiselect',
+			'options'    => cp_resources()->setup->taxonomies->type->get_terms_for_metabox(),
+			'attributes' => [
+			'placeholder'                   => sprintf( __( 'Select a %s', 'cp-resources' ), cp_resources()->setup->taxonomies->type->single_label ),
+				'data-maximum-selection-length' => '1',
+			],
 		] );
 
 		$cmb->add_group_field( $group_field_id, [

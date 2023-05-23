@@ -122,6 +122,34 @@ class Settings {
 			'options' => $objects,
 		) );
 
+		// handle display settings for each Object with Resources
+		$has_resources = self::get( 'has_resources', [] );
+		$display_options = apply_filters( 'cp_resources_settings_display_options', [
+			'before_content' => __( 'Before Content', 'cp-resources' ),
+			'after_content'  => __( 'After Content', 'cp-resources' ),
+			'none'           => __( 'None', 'cp-resources' ),
+		] );
+
+		if ( ! empty( $has_resources ) ) {
+			$main_options->add_field( array(
+				'name'    => __( 'Display Settings', 'cp-resources' ),
+				'desc'    => sprintf( __( 'Specify where %s should display for each object.', 'cp-resources' ), cp_resources()->setup->post_types->resource->plural_label ),
+				'id'      => 'resource_display_title',
+				'type'    => 'title',
+			) );
+		}
+
+		foreach( $has_resources as $post_type ) {
+			$type = get_post_type_object( $post_type );
+			$main_options->add_field( array(
+				'name'    => $type->label,
+				'id'      => 'resource_display_' . $post_type,
+				'type'    => 'radio_inline',
+				'options' => $display_options,
+				'default' => 'before_content',
+			) );
+		}
+
 //		$this->item_options();
 //		$this->advanced_options();
 
