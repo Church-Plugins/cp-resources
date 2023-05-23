@@ -65,3 +65,7 @@ function cp_resources_load_textdomain() {
 
 }
 add_action( 'init', 'cp_resources_load_textdomain' );
+
+// lifecycle hooks
+register_activation_hook( __FILE__, function() { do_action( 'cp_resources_activated' ); } );
+register_deactivation_hook( __FILE__, function() { do_action( 'cp_resources_deactivated' ); } );

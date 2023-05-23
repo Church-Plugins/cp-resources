@@ -77,7 +77,11 @@ class Init {
 
 		// make sure needed tables are installed
 		if ( ! $cp->is_installed() ) {
-			return;
+			$cp->update_install();
+
+			if ( ! $cp->is_installed() ) {
+				return;
+			}
 		}
 
 		$this->includes();

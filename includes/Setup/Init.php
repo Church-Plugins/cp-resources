@@ -286,6 +286,10 @@ class Init {
 			}
 
 			$resource->update( [ 'title' => get_the_title( $object_id ), 'hide_archive' => $is_hidden, 'status' => get_post_status( $object_id ) ] );
+
+			if ( get_post_type( $object_id ) != $this->post_types->resource->post_type ) {
+				wp_set_object_terms( $object_id, get_post_type_object( get_post_type( $object_id ) )->label, $this->taxonomies->type->taxonomy );
+			}
 		} catch ( Exception $e ) {
 			error_log( $e );
 		}
