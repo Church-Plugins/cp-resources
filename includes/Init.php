@@ -77,6 +77,7 @@ class Init {
 
 		// make sure needed tables are installed
 		if ( ! $cp->is_installed() ) {
+			add_filter( 'cp_table_needs_check', '__return_true' );
 			$cp->update_install();
 
 			if ( ! $cp->is_installed() ) {
