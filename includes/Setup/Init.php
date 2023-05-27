@@ -82,9 +82,33 @@ class Init {
 		add_filter( 'cmb2_override_meta_value', [ $this, 'meta_get_override' ], 10, 4 );
 		add_filter( 'cmb2_save_post_fields_object_resources', [ $this, 'save_object_resources' ], 10 );
 		add_action( 'save_post', [ $this, 'save_resource' ], 500 );
+		add_action( "deleted_post", [ $this, 'delete_post' ] );
 	}
 
 	/** Actions ***************************************************/
+
+	/**
+	 * Delete object relationships when post is deleted
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param $object_id
+	 *
+	 * @author Tanner Moushey, 5/26/23
+	 */
+	public function delete_post( $object_id ) {
+		$resources = wp_list_pluck( Resource::get_all_resources( $object_id ), 'id' );
+
+		// loop through the original resources array and remove those that no longer exist
+		foreach ( $resources as $resource_id ) {
+			try {
+				$resource = Resource::get_instance( $resource_id );
+				$resource->delete_object_relationship( $object_id );
+			} catch ( Exception $e ) {
+				error_log( $e );
+			}
+		}
+	}
 
 	public function output_resources( $content ) {
 		$resource_objects = Settings::get( 'has_resources' );
