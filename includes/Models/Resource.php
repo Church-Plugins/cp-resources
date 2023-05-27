@@ -155,6 +155,88 @@ ORDER BY %2$s.order ASC', $instance->table_name, $meta->table_name, $object_id )
 	}
 
 	/**
+	 * Create a new Resource
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param $data       array {
+	 *                          The data for the new resource object
+	 *
+	 * @type string $title      The title for the new resource. Required.
+	 * @type string $url        The url for the Resource
+	 * @type string $visibility Whether the resource should be hidden from the archive. Set to 'on' for hidden,
+	 *                              otherwise, keep blank.
+	 * @type array  $type       The Type taxonomy term to use for this Resource.
+	 * @type array  $topic      The Topic taxonomy term to use for this Resource.
+	 * }
+	 *
+	 * @param int $object_id    The object to attach this resource to. Optional.
+	 * @param int $order        The order for the object relationship.
+	 *
+	 * @return bool|static
+	 * @throws Exception
+	 * @author Tanner Moushey, 5/26/23
+	 */
+	public static function create( $data, $object_id = 0, $order = 0 ) {
+		$data = wp_parse_args( $data, [
+			'visibility' => '',
+		] );
+
+		if ( empty( $data['title'] ) ) {
+			throw new Exception( 'title is a required parameter to create a resource.' );
+		}
+
+		if ( empty( $data['url'] ) ) {
+			throw new Exception( 'url is a required parameter to create a resource.' );
+		}
+
+		$resource_id = wp_insert_post( [
+			'post_type'   => cp_resources()->setup->post_types->resource->post_type,
+			'post_title'  => $data['title'],
+			'post_status' => 'publish',
+			'post_meta'   => [
+				'resource_url'   => $data['url'],
+				'_hide_resource' => $data['visibility'],
+			],
+		], true );
+
+		if ( ! $resource_id || is_wp_error( $resource_id ) ) {
+			throw new Exception( 'Unable to create new resource.' );
+		}
+
+		if ( ! empty( $data['type'] ) ) {
+			wp_set_post_terms( $resource_id, $data['type'], cp_resources()->setup->taxonomies->type->taxonomy );
+		}
+
+		if ( ! empty( $data['topic'] ) ) {
+			wp_set_post_terms( $resource_id, $data['topic'], cp_resources()->setup->taxonomies->topic->taxonomy );
+		}
+
+		$resource = self::get_instance_from_origin( $resource_id );
+
+		if ( $object_id ) {
+			$resource->update_object_relationship( $object_id, $order );
+		}
+
+		$resource->update_meta( [ 'key' => 'resource_url', 'value' => esc_url( $data['url'] ) ] );
+
+		$is_hidden = $data['visibility'] ? 1 : 0;
+
+		// if the Resource Type is set to Always Show, then don't allow the resource to be set to hidden
+		if ( 'show' == $resource->get_type_visibility() ) {
+			$is_hidden = 0;
+			delete_post_meta( $object_id, '_hide_resource' );
+		}
+
+		$resource->update( [
+			'hide_archive' => $is_hidden,
+			'status'       => get_post_status( $object_id )
+		] );
+
+		return $resource;
+	}
+
+	/**
 	 * Whether to show this resource in the archive
 	 *
 	 * @since  1.0.0
@@ -283,6 +365,21 @@ ORDER BY %2$s.order ASC', $instance->table_name, $meta->table_name, $object_id )
 	 */
 	public function delete_object_relationship( $object_id ) {
 		return $this->delete_meta( $object_id, 'secondary_id' );
+	}
+
+	/**
+	 * Update the resource url for this Resource
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param string $url
+	 *
+	 * @author Tanner Moushey, 5/26/23
+	 */
+	public function update_url( $url ) {
+		$url = esc_url( $url );
+		update_post_meta( $this->origin_id, 'resource_url', $url );
+		$this->update_meta( [ 'key' => 'resource_url', 'value' => esc_url( $url ) ] );
 	}
 
 	/**

@@ -189,6 +189,13 @@ class Init {
 			'options' => $all_resources,
 		] );
 
+		$cmb->add_field( [
+			'name'    => sprintf( __( 'Feature the first %s', 'cp-resources' ), cp_resources()->setup->post_types->resource->singular_label ),
+			'id'      => '_object_resources_featured',
+			'type'    => 'checkbox',
+			'desc'    => sprintf( __( 'Mark the first %s as featured.' ), cp_resources()->setup->post_types->resource->single_label ),
+		] );
+
 		$group_field_id = $cmb->add_field( [
 			'id'         => '_cp_new_resources',
 			'type'       => 'group',
@@ -328,47 +335,8 @@ class Init {
 		add_action( 'cmb2_can_save', '__return_false' );
 
 		foreach ( $items as $index => $data ) {
-
-			// we must have a title
-			if ( empty( $data['title'] ) ) {
-				continue;
-			}
-
 			try {
-				$resource_id = wp_insert_post( [
-					'post_type'   => cp_resources()->setup->post_types->resource->post_type,
-					'post_title'  => $data['title'],
-					'post_status' => 'publish',
-					'post_meta'   => [
-						'resource_url'   => $data['url'],
-						'_hide_resource' => $data['visibility'],
-					],
-				], true );
-
-				if ( ! $resource_id || is_wp_error( $resource_id ) ) {
-					throw new Exception( 'Unable to create new resource.' );
-				}
-
-				wp_set_post_terms( $resource_id, $data['type'], cp_resources()->setup->taxonomies->type->taxonomy );
-				wp_set_post_terms( $resource_id, $data['topic'], cp_resources()->setup->taxonomies->topic->taxonomy );
-
-				$resource = Resource::get_instance_from_origin( $resource_id );
-				$resource->update_object_relationship( $object_id, $count + $index );
-				$resource->update_meta( [ 'key' => 'resource_url', 'value' => esc_url( $data['url'] ) ] );
-
-				$is_hidden = $data['visibility'] ? 1 : 0;
-
-				// if the Resource Type is set to Always Show, then don't allow the resource to be set to hidden
-				if ( 'show' == $resource->get_type_visibility() ) {
-					$is_hidden = 0;
-					delete_post_meta( $object_id, '_hide_resource' );
-				}
-
-				$resource->update( [
-					'hide_archive' => $is_hidden,
-					'status'       => get_post_status( $object_id )
-				] );
-
+				Resource::create( $data, $object_id, $count + $index );
 			} catch ( Exception $e ) {
 				error_log( $e );
 			}

@@ -47,7 +47,7 @@ class Resource extends Controller{
 	 * @author Tanner Moushey, 5/22/23
 	 */
 	public function get_url() {
-		$url = $this->resource_url;
+		$url = $this->model->get_meta_value( 'resource_url' );
 
 		if ( empty( $url ) ) {
 			$url = get_permalink( $this->post->ID );

@@ -2,6 +2,8 @@
 use ChurchPlugins\Helpers;
 
 $taxonomies = cp_resources()->setup->taxonomies->get_objects();
+$hidden_types = cp_resources()->setup->taxonomies->type->get_types_by_visibility( 'hide' );
+
 $uri = explode( '?', $_SERVER['REQUEST_URI'] )[0];
 $get = $_GET;
 $display = '';
@@ -30,7 +32,7 @@ $display = apply_filters( 'cpl_filters_display', $display );
 			<div class="cpl-filter--<?php echo esc_attr( $tax->taxonomy ); ?> cpl-filter--has-dropdown" <?php echo $display; ?>>
 				<a href="#" class="cpl-filter--dropdown-button cpl-button is-light"><?php echo $tax->plural_label; ?></a>
 				<div class="cpl-filter--dropdown">
-					<?php foreach ( $terms as $term ) : ?>
+					<?php foreach ( $terms as $term ) : if ( in_array( $term->term_id, $hidden_types ) ) continue; ?>
 						<label>
 							<input type="checkbox" <?php checked( in_array( $term->slug, Helpers::get_param( $_GET, $tax->taxonomy, [] ) ) ); ?> name="<?php echo esc_attr( $tax->taxonomy ); ?>[]" value="<?php echo esc_attr( $term->slug ); ?>"/> <?php echo esc_html( $term->name ); ?>
 						</label>

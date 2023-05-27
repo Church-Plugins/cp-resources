@@ -63,6 +63,8 @@ class Type extends Taxonomy  {
 			'data-maximum-selection-length' => '1',
 		];
 
+		$args['desc'] = sprintf( __( 'The %2$s for this %1$s. <a href="%3$s" target="_blank">Click here to add a new %2$s.</a>', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label, $this->single_label, $this->get_edit_url() );
+
 		return $args;
 	}
 
@@ -118,9 +120,59 @@ class Type extends Taxonomy  {
 		return apply_filters( "{$this->taxonomy}_get_term_data", $terms );
 	}
 
+	/**
+	 * Get Types that are assigned the provided visibility
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return mixed|void
+	 * @author Tanner Moushey, 5/24/23
+	 */
+	public function get_types_by_visibility( $visibility = 'hidden' ) {
+		$terms = $this->get_term_data();
+		$hidden_terms = [];
+
+		foreach( $terms as $term ) {
+			if ( $visibility != get_term_meta( $term->term_id, $this->taxonomy . '_visibility', true ) ) {
+				continue;
+			}
+
+			$hidden_terms[] = $term->term_id;
+		}
+
+		return apply_filters( 'cp_resources_type_get_hidden_types', $hidden_terms );
+	}
+
+	/**
+	 * Get Types that should be included in the Archive query
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return mixed|void
+	 * @author Tanner Moushey, 5/24/23
+	 */
+	public function get_visible_types() {
+		$terms = $this->get_term_data();
+		$visible_terms = [];
+
+		foreach( $terms as $term ) {
+			if ( 'hide' == get_term_meta( $term->term_id, $this->taxonomy . '_visibility', true ) ) {
+				continue;
+			}
+
+			$visible_terms[] = $term->term_id;
+		}
+
+		return apply_filters( 'cp_resources_type_get_visible_types', $visible_terms );
+	}
+
 
 	public function register_metaboxes() {
-		parent::register_metaboxes();
+
+		// only show the Type metabox if we are on a Resource... otherwise we set it automatically
+		if ( cp_resources()->setup->post_types->resource->post_type == Helpers::get_request( 'post_type', get_post_type( Helpers::get_request( 'post' ) ) ) ) {
+			parent::register_metaboxes();
+		}
 
 		$args = apply_filters( "{$this->taxonomy}_term_metabox_args", [
 			'id'           => sprintf( '%s_visibility', $this->taxonomy ),

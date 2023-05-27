@@ -63,6 +63,16 @@ class Resource extends PostType  {
 
 		$query->set( 'post_type', $resource_objects );
 		$query->set( 'is_resource_query', true );
+
+		// Add tax query to include only those taxonomies that should be shown in the archive
+		$tax_query = $query->get( 'tax_query', [] );
+
+		$tax_query[] = [
+			'taxonomy' => cp_resources()->setup->taxonomies->type->taxonomy,
+			'terms'    => cp_resources()->setup->taxonomies->type->get_visible_types(),
+		];
+
+		$query->set( 'tax_query', $tax_query );
 	}
 
 	/**
