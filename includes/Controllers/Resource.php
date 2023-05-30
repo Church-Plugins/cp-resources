@@ -46,7 +46,7 @@ class Resource extends Controller{
 			$title = str_replace( $object_title . ' &#8211; ', '', $title );
 		}
 
-		return $this->filter( $title, __FUNCTION__ );
+		return $this->filter( htmlspecialchars_decode( $title, ENT_QUOTES | ENT_HTML401 ), __FUNCTION__ );
 	}
 
 	/**
@@ -122,9 +122,17 @@ class Resource extends Controller{
 		}
 
 		if ( ! $thumb && ! empty( $this->get_types() ) ) {
-			try {
-			} catch( Exception $e ) {
-				error_log( $e );
+			foreach( $this->get_types() as $id => $type ) {
+				$thumb = get_term_meta( $id, 'cp_resource_type_thumbnail', true );
+
+				if ( $thumb_id =  get_term_meta( $id, 'cp_resource_type_thumbnail_id', true ) ) {
+					$image = wp_get_attachment_image_src( $thumb_id, 'large' );
+					if ( ! empty( $image[0] ) ) {
+						$thumb = $image[0];
+					}
+				}
+
+				break;
 			}
 		}
 
@@ -149,7 +157,7 @@ class Resource extends Controller{
 
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
-				$return[ $term->slug ] = [
+				$return[ $term->term_id ] = [
 					'name' => $term->name,
 					'slug' => $term->slug,
 					'url'  => get_term_link( $term )
@@ -166,7 +174,7 @@ class Resource extends Controller{
 
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
-				$return[ $term->slug ] = [
+				$return[ $term->term_id ] = [
 					'name' => $term->name,
 					'slug' => $term->slug,
 					'url'  => get_term_link( $term )
