@@ -41,8 +41,10 @@ class Resource extends Controller{
 		if ( is_singular() && ! is_singular( cp_resources()->setup->post_types->resource->post_type ) ) {
 			$object_title = get_the_title( get_queried_object_id() );
 			$title = str_replace( ' - ' . $object_title, '', $title );
+			$title = str_replace( ' – ' . $object_title, '', $title );
 			$title = str_replace( ' &#8211 ' . $object_title, '', $title );
 			$title = str_replace( $object_title . ' - ', '', $title );
+			$title = str_replace( $object_title . ' – ', '', $title );
 			$title = str_replace( $object_title . ' &#8211; ', '', $title );
 		}
 
