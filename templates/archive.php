@@ -10,20 +10,20 @@ $description = get_the_archive_description();
 
 	<h1 class="page-title"><?php echo apply_filters( 'cp-resources-archive-title', cp_resources()->setup->post_types->resource->plural_label ); ?></h1>
 
-	<div class="cpl-archive--container">
+	<div class="cp-resources-archive--container">
 
-		<div class="cpl-archive--container--filter">
+		<div class="cp-resources-archive--container--filter">
 			<?php cp_resources()->templates->get_template_part( "parts/filter" ); ?>
 		</div>
 
-		<div class="cpl-archive--container--list">
-			<?php  cp_resources()->templates->get_template_part( "parts/filter-selected" ); ?>
+		<div class="cp-resources-archive--container--list">
+			<?php cp_resources()->templates->get_template_part( "parts/filter-selected" ); ?>
 
-			<div class="cpl-archive--list">
+			<div class="cp-resources-archive--list">
 				<?php if ( have_posts() ) { ?>
 					<?php while( have_posts() ) : the_post();  ?>
-						<div class="cpl-archive--list--item">
-							<?php the_title(); // Templates::get_template_part( "parts/" . Templates::get_type() . "-list" ); ?>
+						<div class="cp-resources-archive--list--item" onclick="window.location = jQuery(this).find('.cp-resources-list-resource--title a').attr('href');">
+							<?php cp_resources()->templates->get_template_part( 'parts/resource-list' ); ?>
 						</div>
 					<?php endwhile; ?>
 				<?php } else if( !empty( $type ) && is_object( $type ) && !empty( $type->plural_label ) ) { ?>
@@ -35,4 +35,6 @@ $description = get_the_archive_description();
 	</div>
 
 	<?php do_action( 'cp_resources_after_archive' ); ?>
+
+	<?php the_posts_pagination(); ?>
 </div>

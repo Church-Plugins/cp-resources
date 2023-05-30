@@ -25,12 +25,12 @@ get_header();
 /**
  * Provides an action that allows for the injection of HTML at the top of the template after the header.
  */
-do_action( 'cpl_default_template_after_header' );
+do_action( 'cp_resources_default_template_after_header' );
 ?>
-<main id="cpl-pg-template" class="<?php echo implode( ' ', $classes ); ?>">
-	<?php echo apply_filters( 'cpl_default_template_before_content', '' ); ?>
+<main id="cp-pg-template" class="<?php echo implode( ' ', $classes ); ?>">
+	<?php do_action( 'cp_resources_default_template_before_content', '' ); ?>
 	<?php cp_resources()->templates->get_view(); ?>
-	<?php echo apply_filters( 'cpl_default_template_after_content', '' ); ?>
+	<?php do_action( 'cp_resources_default_template_after_content', '' ); ?>
 </main> <!-- #cp-pg-template -->
 <?php
 

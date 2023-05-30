@@ -9,18 +9,20 @@ $get = $_GET;
 $display = '';
 
 if ( empty( $get ) ) {
-	$display = 'style="display: none;"';
+	$display = ''; // 'style="display: none;"';
 }
 
 $display = apply_filters( 'cpl_filters_display', $display );
 ?>
-<div class="cpl-filter">
+<div class="cp-resources-filter">
 
-	<form method="get" class="cpl-filter--form">
+	<form method="get" class="cp-resources-filter--form">
 
-		<div class="cpl-filter--toggle">
-			<a href="#" class="cpl-filter--toggle--button cpl-button"><span><?php _e( 'Filter', 'cp-library' ); ?></span> <?php echo Helpers::get_icon( 'filter' ); ?></a>
+		<?php if ( 0 ) : // disable Filter toggle ?>
+		<div class="cp-resources-filter--toggle">
+			<a href="#" class="cp-resources-filter--toggle--button cp-button"><span><?php _e( 'Filter', 'cp-library' ); ?></span> <?php echo Helpers::get_icon( 'filter' ); ?></a>
 		</div>
+		<?php endif; ?>
 
 		<?php foreach( $taxonomies as $tax ) :
 			$terms = get_terms( [ 'taxonomy' => $tax->taxonomy ] );
@@ -29,9 +31,9 @@ $display = apply_filters( 'cpl_filters_display', $display );
 				continue;
 			} ?>
 
-			<div class="cpl-filter--<?php echo esc_attr( $tax->taxonomy ); ?> cpl-filter--has-dropdown" <?php echo $display; ?>>
-				<a href="#" class="cpl-filter--dropdown-button cpl-button is-light"><?php echo $tax->plural_label; ?></a>
-				<div class="cpl-filter--dropdown">
+			<div class="cp-resources-filter--<?php echo esc_attr( $tax->taxonomy ); ?> cp-resources-filter--has-dropdown" <?php echo $display; ?>>
+				<a href="#" class="cp-resources-filter--dropdown-button cp-button is-light"><?php echo $tax->plural_label; ?></a>
+				<div class="cp-resources-filter--dropdown">
 					<?php foreach ( $terms as $term ) : if ( in_array( $term->term_id, $hidden_types ) ) continue; ?>
 						<label>
 							<input type="checkbox" <?php checked( in_array( $term->slug, Helpers::get_param( $_GET, $tax->taxonomy, [] ) ) ); ?> name="<?php echo esc_attr( $tax->taxonomy ); ?>[]" value="<?php echo esc_attr( $term->slug ); ?>"/> <?php echo esc_html( $term->name ); ?>
@@ -41,8 +43,8 @@ $display = apply_filters( 'cpl_filters_display', $display );
 			</div>
 		<?php endforeach; ?>
 
-		<div class="cpl-filter--search">
-			<div class="cpl-filter--search--box">
+		<div class="cp-resources-filter--search">
+			<div class="cp-resources-filter--search--box">
 				<button type="submit"><span class="material-icons-outlined">search</span></button>
 				<input type="text" name="s" value="<?php echo Helpers::get_param( $_GET, 's' ); ?>" placeholder="<?php _e( 'Search', 'cp-library' ); ?>"/>
 			</div>
@@ -53,16 +55,16 @@ $display = apply_filters( 'cpl_filters_display', $display );
 	<script>
 
 		var $ = jQuery;
-	  	$('.cpl-filter--toggle--button').on('click', function(e) {
+	  	$('.cp-resources-filter--toggle--button').on('click', function(e) {
 			e.preventDefault();
-			$('.cpl-filter--has-dropdown').toggle();
+			$('.cp-resources-filter--has-dropdown').toggle();
 		});
 
-	  	$( '.cpl-filter--form input[type=checkbox]' ).on( 'change',
+	  	$( '.cp-resources-filter--form input[type=checkbox]' ).on( 'change',
 			function() {
 
 				// Munge the URL to discard pagination when fiilter options change
-				var form = $( this ).parents( 'form.cpl-filter--form' );
+				var form = $( this ).parents( 'form.cp-resources-filter--form' );
 				var location = window.location;
 				var baseUrl = location.protocol + '//' + location.hostname;
 				var pathSplit = location.pathname.split( '/' );
@@ -101,10 +103,10 @@ $display = apply_filters( 'cpl_filters_display', $display );
 				}
 				// Set form property and do it
 				$( form ).attr( 'action', baseUrl + finalPath );
-				$('.cpl-filter--form').submit();
+				$('.cp-resources-filter--form').submit();
 			});
 
-		$('.cpl-filter--has-dropdown a').on( 'click', function(e) {
+		$('.cp-resources-filter--has-dropdown a').on( 'click', function(e) {
 			e.preventDefault();
 			$(this).parent().toggleClass('open');
 		})

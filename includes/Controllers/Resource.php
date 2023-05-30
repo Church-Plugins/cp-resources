@@ -35,7 +35,18 @@ class Resource extends Controller{
 	}
 
 	public function get_title() {
-		return $this->filter( get_the_title( $this->post->ID ), __FUNCTION__ );
+		$title = get_the_title( $this->post->ID );
+
+		// if we are on a single item that is not a Resource, remove the item's title from the Resource name
+		if ( is_singular() && ! is_singular( cp_resources()->setup->post_types->resource->post_type ) ) {
+			$object_title = get_the_title( get_queried_object_id() );
+			$title = str_replace( ' - ' . $object_title, '', $title );
+			$title = str_replace( ' &#8211 ' . $object_title, '', $title );
+			$title = str_replace( $object_title . ' - ', '', $title );
+			$title = str_replace( $object_title . ' &#8211; ', '', $title );
+		}
+
+		return $this->filter( $title, __FUNCTION__ );
 	}
 
 	/**
@@ -56,12 +67,45 @@ class Resource extends Controller{
 		return $this->filter( $url, __FUNCTION__ );
 	}
 
-	public function get_icon() {}
+	/**
+	 * Get the icon for this resource
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return mixed|void
+	 * @author Tanner Moushey, 5/29/23
+	 */
+	public function get_icon() {
+		list( $type, $ext, $test ) = explode( '/', $this->get_file_type() );
 
-	public function get_file_type() {
-		if ( $file_id = $this->resource_url_id ) {
+		$icon = 'link';
 
+		if ( in_array( $type, [ 'audio', 'video' ] ) ) {
+			$icon = $type;
 		}
+
+		if ( in_array( $ext, [ 'doc', 'pdf' ] ) ) {
+			$icon = $ext;
+		}
+
+		ob_start();
+		cp_resources()->templates->get_template_part( "icons/$icon.svg" );
+		$icon = ob_get_clean();
+
+		return $this->filter( $icon, __FUNCTION__ );
+	}
+
+	/**
+	 * Get the file type for this resource
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return mixed|void
+	 * @author Tanner Moushey, 5/29/23
+	 */
+	public function get_file_type() {
+		$type = Helpers::get_file_type( $this->model->get_meta_value( 'resource_url' ) );
+		return $this->filter( $type, __FUNCTION__ );
 	}
 
 	/**
@@ -87,10 +131,14 @@ class Resource extends Controller{
 		return $this->filter( $thumb, __FUNCTION__ );
 	}
 
-	public function get_publish_date() {
+	public function get_publish_date( $relative = true, $format = false ) {
+		$format = ! empty( $format ) ? $format : get_option( 'date_format' );
+
 		if ( $date = get_post_datetime( $this->post, 'date', 'gmt' ) ) {
 			$date = $date->format( 'U' );
 		}
+
+		$date = $relative ? Helpers::relative_time( $date ) : date( $format, $date );
 
 		return $this->filter( $date, __FUNCTION__ );
 	}
@@ -127,6 +175,25 @@ class Resource extends Controller{
 		}
 
 		return $this->filter( $return, __FUNCTION__ );
+	}
+
+	/**
+	 * Get the label for the first Type
+	 *
+	 * @since  1.0.0
+	 *
+	 * @return mixed|void
+	 * @author Tanner Moushey, 5/29/23
+	 */
+	public function get_type_label() {
+		$types = $this->get_types();
+		$label = '';
+
+		if ( ! empty( $types[0] ) ) {
+			$label = $types[0]['name'];
+		}
+
+		return $this->filter( $label, __FUNCTION__ );
 	}
 
 }

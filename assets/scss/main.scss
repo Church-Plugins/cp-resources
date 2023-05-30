@@ -1,30 +1,14 @@
-.cp-resources-widget {
-	--cp-resources-widget-list--margin: 0 0 0 var(--cp-gap--md);
-	--cp-resources-widget-list--width: 18rem;
-	--cp-resources-widget-list--item-background: var(--cp-color-ui-inverted-light);
-	--cp-resources-widget-list--item-color: var(--cp-color-text-primary);
-	--cp-resources-widget-list--item-background--hover: var(--cp-color-ui-secondary);
-	--cp-resources-widget-list--item-color--hover: var(--cp-color-text-inverted);
-	--cp-resources-widget-list--item-padding: var(--cp-gap-base);
-	--cp-resources-widget-list--item-margin: 0 0 var(--cp-gap-base);
+@import '../../includes/ChurchPlugins/assets/scss/vars';
+@import '../../includes/ChurchPlugins/assets/scss/mixins/breakpoints';
+@import '../../includes/ChurchPlugins/assets/scss/elements/button';
 
-	margin: var(--cp-resources-widget-list--margin);
+@import "components/widget";
+@import "components/archive";
+@import "components/filter";
 
-	.cp-resources-list {
-		max-width: var( --cp-resources-widget-list--width );
-
-		&--resource {
-			a {
-				display: block;
-				background: var(--cp-resources-widget-list--item-background);
-				padding: var(--cp-resources-widget-list--item-padding);
-				margin: var(--cp-resources-widget-list--item-margin);
-
-				&:hover {
-					background: var(--cp-resources-widget-list--item-background--hover);
-					color: var(--cp-resources-widget-list--item-color--hover);
-				}
-			}
-		}
-	}
+.cp-resources-template {
+	max-width: 100%;
+	width: var( --cp-content-width );
+	padding: var(--cp-content-padding);
+	margin: auto;
 }

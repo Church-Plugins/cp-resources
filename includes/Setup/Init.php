@@ -213,12 +213,12 @@ class Init {
 			'options' => $all_resources,
 		] );
 
-		$cmb->add_field( [
-			'name'    => sprintf( __( 'Feature the first %s', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label ),
-			'id'      => '_object_resources_featured',
-			'type'    => 'checkbox',
-			'desc'    => sprintf( __( 'Mark the first %s as featured.' ), cp_resources()->setup->post_types->resource->single_label ),
-		] );
+//		$cmb->add_field( [
+//			'name'    => sprintf( __( 'Feature the first %s', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label ),
+//			'id'      => '_object_resources_featured',
+//			'type'    => 'checkbox',
+//			'desc'    => sprintf( __( 'Mark the first %s as featured.' ), cp_resources()->setup->post_types->resource->single_label ),
+//		] );
 
 		$group_field_id = $cmb->add_field( [
 			'id'         => '_cp_new_resources',
