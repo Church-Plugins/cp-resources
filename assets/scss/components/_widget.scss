@@ -41,22 +41,6 @@
 				flex-shrink: 0;
 			}
 
-			&:first-child a {
-				background: transparent;
-
-				&:before {
-					content: '';
-					position: absolute;
-					height: 100%;
-					width: 100%;
-					background: var(--cp-resources-widget-list--item-background--hover);
-					opacity: .25;
-					left: 0;
-					top: 0;
-					z-index: -1;
-				}
-			}
-
 			a {
 				display: flex;
 				align-items: center;
