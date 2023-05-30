@@ -158,7 +158,7 @@ class Settings {
 	}
 
 	protected function license_fields() {
-		$license = new \ChurchPlugins\Setup\Admin\License( 'cp_resources_license', 436, CP_RESOURCES_STORE_URL, CP_RESOURCES_PLUGIN_FILE, get_admin_url( null, 'admin.php?page=cp_resources_license' ) );
+		$license = new \ChurchPlugins\Setup\Admin\License( 'cp_resources_license', 0, CP_RESOURCES_STORE_URL, CP_RESOURCES_PLUGIN_FILE, get_admin_url( null, 'admin.php?page=cp_resources_license' ) );
 
 		/**
 		 * Registers settings page, and set main item as parent.
