@@ -78,7 +78,10 @@ class Resource extends Controller{
 	 * @author Tanner Moushey, 5/29/23
 	 */
 	public function get_icon() {
-		list( $type, $ext, $test ) = explode( '/', $this->get_file_type() );
+		$type = '';
+		$ext = '';
+
+		list( $type, $ext ) = explode( '/', $this->get_file_type() );
 
 		$icon = 'link';
 

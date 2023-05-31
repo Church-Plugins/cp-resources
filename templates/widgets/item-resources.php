@@ -5,6 +5,10 @@ if ( empty( $args ) ) {
 	return;
 }
 
+$args = wp_parse_args( $args, [
+	'title' => cp_resources()->setup->post_types->resource->plural_label,
+] );
+
 $resources = \CP_Resources\Models\Resource::get_all_resources( $args['id'] );
 
 if ( empty( $resources ) ) {
@@ -26,7 +30,10 @@ $container_classes = apply_filters( 'cp_resources_widget_container_classes', $co
 <?php do_action( 'cp_resources_item_resources_before', $post ); ?>
 
 <div class="<?php echo esc_attr( implode( ' ', $container_classes) ); ?>">
-	<h5><?php echo cp_resources()->setup->post_types->resource->plural_label; ?></h5>
+
+	<?php if( $args['title'] ) : ?>
+		<h5 class="cp-resources-list--title"><?php echo $args['title']; ?></h5>
+	<?php endif; ?>
 
 	<div class="cp-resources-list">
 
@@ -52,4 +59,3 @@ $container_classes = apply_filters( 'cp_resources_widget_container_classes', $co
 do_action( 'cp_resources_item_resources_after', $post );
 wp_reset_postdata();
 $post = $post_orig;
-?>
