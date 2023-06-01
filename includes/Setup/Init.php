@@ -225,12 +225,12 @@ class Init {
 			'type'       => 'group',
 			'repeatable' => true,
 			'options'    => [
-				'group_title'    => cp_resources()->setup->post_types->resource->single_label . ' {#}',
+				'group_title'    => sprintf( __( 'Create New %s - #{#}', 'cp-resources' ),  cp_resources()->setup->post_types->resource->single_label ),
 				'add_button'     => __( 'Add Another', 'cp-library' ) . ' ' . cp_resources()->setup->post_types->resource->single_label,
 				'remove_button'  => __( 'Remove', 'cp-library' ) . ' ' . cp_resources()->setup->post_types->resource->single_label,
 			    'sortable'      => true,
 				'remove_confirm' => sprintf( esc_html__( 'Are you sure you want to remove this %s?', 'cp-library' ), cp_resources()->setup->post_types->resource->single_label ),
-				'closed' => false,
+				'closed' => true,
 			],
 		] );
 
