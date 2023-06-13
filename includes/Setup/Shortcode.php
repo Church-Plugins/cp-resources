@@ -1,6 +1,7 @@
 <?php
 namespace CP_Resources\Setup;
 
+use CP_Resources\Admin\Settings;
 use CP_Resources\Models\Resource;
 
 /**
@@ -62,9 +63,8 @@ class Shortcode
 			$args['id'] = get_the_ID();
 		}
 
-		$resources = Resource::get_instance_from_origin( $args['id'] );
-
-		if ( empty( $resources ) ) {
+		$resource_objects = Settings::get( 'resource_objects', [] );
+		if ( ! in_array( get_post_type( $args['id'] ), $resource_objects ) ) {
 			return '';
 		}
 

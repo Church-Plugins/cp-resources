@@ -307,7 +307,7 @@ class Init {
 				return;
 			}
 
-			$resource    = Resource::get_instance_from_origin( $object_id );
+			$resource  = Resource::get_instance_from_origin( $object_id, true );
 			$is_hidden = get_post_meta( $object_id, '_hide_resource', true ) ? 1 : 0;
 
 			// if the Resource Type is set to Always Show, then don't allow the resource to be set to hidden
