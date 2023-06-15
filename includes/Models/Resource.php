@@ -101,7 +101,7 @@ ORDER BY %2$s.order ASC', $instance->table_name, $meta->table_name, $object_id )
 	 *
 	 * @author Tanner Moushey
 	 */
-	public static function get_instance_from_origin( $origin_id, $create = false ) {
+	public static function get_instance_from_origin( $origin_id, $create = true ) {
 		global $wpdb;
 
 		$origin_id = apply_filters( 'cp_origin_id', absint( $origin_id ) );
