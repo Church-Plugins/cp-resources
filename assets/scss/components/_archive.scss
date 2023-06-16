@@ -25,9 +25,11 @@
 }
 
 .cp-resources-list-resource {
-		display: grid;
-		column-gap: var(--cp-gap--md);
-	  grid-template-columns: minmax(5rem, 33%) 1fr;
+	display: grid;
+	column-gap: var(--cp-gap--md);
+	grid-template-columns: minmax(5rem, 33%) 1fr;
+	height: 100%;
+	align-items: center;
 
 	&--thumb {
 		grid-column: 1;
@@ -42,10 +44,16 @@
 	}
 
 	&--title {
-		font-size: var(--cp-font-size-h4);
+		font-size: var(--cp-font-size-h5);
+		text-transform: uppercase;
+		margin-bottom: var(--cp-gap-base);
 
 		a {
 			text-decoration: none;
 		}
+	}
+
+	&--type {
+		font-size: var(--cp-font-size--md);
 	}
 }

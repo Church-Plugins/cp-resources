@@ -202,8 +202,9 @@ class Resource extends Controller{
 		$types = $this->get_types();
 		$label = '';
 
-		if ( ! empty( $types[0] ) ) {
-			$label = $types[0]['name'];
+		if ( ! empty( $types ) ) {
+			$type = array_shift( $types );
+			$label = $type['name'];
 		}
 
 		return $this->filter( $label, __FUNCTION__ );

@@ -29,10 +29,6 @@ $classes = apply_filters( 'cp_resources_resource_list_classes', [ 'cp-resources-
 			<p class="cp-resources-list-resource--type"><?php echo esc_html( $type ); ?></p>
 		<?php endif; ?>
 
-		<p class="cp-resources-list-resource--date"><?php echo esc_html( $resource->get_publish_date() ); ?></p>
-
-			<?php  // \CP_Library\Templates::get_template_part( 'parts/item-single/info' ); ?>
-
 	</div>
 
 
