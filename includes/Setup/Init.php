@@ -296,7 +296,9 @@ class Init {
 
 		try {
 
-			$is_resource = get_post_meta( $object_id, '_is_resource', true ) || get_post_type( $object_id ) === $this->post_types->resource->post_type;
+			// use this filter if there are any other posts types that should always be a resource.
+			$resource_post_types = apply_filters( 'cp_resources_resource_post_types', [ $this->post_types->resource->post_type ] );
+			$is_resource = get_post_meta( $object_id, '_is_resource', true ) || in_array( get_post_type( $object_id ), $resource_post_types ) ;
 
 			// if this item is not set as a resource, make sure there isn't an attached resource and delete if there is
 			if ( empty( $is_resource ) ) {
