@@ -25,16 +25,26 @@ $display = apply_filters( 'cpl_filters_display', $display );
 		<?php endif; ?>
 
 		<?php foreach( $taxonomies as $tax ) :
-			$terms = get_terms( [ 'taxonomy' => $tax->taxonomy ] );
+			$terms = get_terms( [ 'taxonomy' => $tax->taxonomy, 'hide_empty' => true ] );
 
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
 				continue;
-			} ?>
+			}
+			?>
 
 			<div class="cp-resources-filter--<?php echo esc_attr( $tax->taxonomy ); ?> cp-resources-filter--has-dropdown" <?php echo $display; ?>>
 				<a href="#" class="cp-resources-filter--dropdown-button cp-button is-light"><?php echo $tax->plural_label; ?></a>
 				<div class="cp-resources-filter--dropdown">
-					<?php foreach ( $terms as $term ) : if ( in_array( $term->term_id, $hidden_types ) ) continue; ?>
+					<?php foreach ( $terms as $term ) :
+						if ( in_array( $term->term_id, $hidden_types ) ) {
+							continue;
+						}
+
+						if ( ! cp_resources()->setup->post_types->resource->has_visible_resources( $term->term_id, $term->taxonomy ) ) {
+							continue;
+						}
+
+						?>
 						<label>
 							<input type="checkbox" <?php checked( in_array( $term->slug, Helpers::get_param( $_GET, $tax->taxonomy, [] ) ) ); ?> name="<?php echo esc_attr( $tax->taxonomy ); ?>[]" value="<?php echo esc_attr( $term->slug ); ?>"/> <?php echo esc_html( $term->name ); ?>
 						</label>

@@ -41,6 +41,46 @@ class Resource extends PostType  {
 	}
 
 	/**
+	 * Determine if the provided term has any visible content
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param $term_id
+	 * @param $taxonomy
+	 *
+	 * @return bool
+	 * @author Tanner Moushey, 6/16/23
+	 */
+	public function has_visible_resources( $term_id, $taxonomy ) {
+		$resource_objects   = Settings::get( 'resource_objects', [] );
+		array_unshift( $resource_objects, $this->post_type );
+
+		// Set up the query arguments
+		$query_args = array(
+			'is_resource_query'      => true,
+			'post_type'              => $resource_objects,
+			'tax_query'              => array(
+				array(
+					'taxonomy' => $taxonomy,
+					'field'    => 'term_id',
+					'terms'    => $term_id,
+				),
+			),
+			'posts_per_page'         => 1,
+			'fields'                 => 'ids',
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'no_found_rows'          => true,
+			'cache_results'          => true,
+		);
+
+		// Run the query
+		$query = new \WP_Query( $query_args );
+
+		return $query->post_count > 0;
+	}
+
+	/**
 	 *
 	 *
 	 * @since  1.0.5
