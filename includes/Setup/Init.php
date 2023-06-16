@@ -267,13 +267,15 @@ class Init {
 			],
 		] );
 
-		$cmb->add_group_field( $group_field_id, [
-			'name' => 'Topic',
-			'id'   => 'topic',
-			'desc' => sprintf( __( 'The Topic for this %s.', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label ),
-			'type' => 'pw_multiselect',
-			'options' => cp_resources()->setup->taxonomies->topic->get_terms_for_metabox(),
-		] );
+		if ( Settings::get_advanced( 'topic_enabled', true ) ) {
+			$cmb->add_group_field( $group_field_id, [
+				'name'    => 'Topic',
+				'id'      => 'topic',
+				'desc'    => sprintf( __( 'The Topic for this %s.', 'cp-resources' ), cp_resources()->setup->post_types->resource->single_label ),
+				'type'    => 'pw_multiselect',
+				'options' => cp_resources()->setup->taxonomies->topic->get_terms_for_metabox(),
+			] );
+		}
 
 	}
 

@@ -2,6 +2,8 @@
 
 namespace CP_Resources\Setup\Taxonomies;
 
+use CP_Resources\Admin\Settings;
+
 /**
  * Setup plugin initialization for Taxonomies
  */
@@ -100,7 +102,10 @@ class Init {
 	public function register_taxonomies() {
 
 		$this->topic = Topic::get_instance();
-		$this->topic->add_actions();
+
+		if ( Settings::get_advanced( 'topic_enabled', true ) ) {
+			$this->topic->add_actions();
+		}
 
 		$this->type = Type::get_instance();
 		$this->type->add_actions();

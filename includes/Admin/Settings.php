@@ -151,7 +151,7 @@ class Settings {
 		}
 
 //		$this->item_options();
-//		$this->advanced_options();
+		$this->advanced_options();
 
 		$this->license_fields();
 
@@ -249,44 +249,12 @@ class Settings {
 			'type' => 'title',
 		) );
 
+
 		$advanced_options->add_field( array(
-			'name'    => __( 'Enable' ) . ' ' . cp_resources()->setup->post_types->item_type->plural_label,
-			'id'      => 'item_type_enabled',
+			'name'    => __( 'Enable' ) . ' ' . cp_resources()->setup->taxonomies->topic->plural_label,
+			'id'      => 'topic_enabled',
 			'type'    => 'radio_inline',
 			'default' => 1,
-			'options' => [
-				1 => __( 'Enable', 'cp-resources' ),
-				0 => __( 'Disable', 'cp-resources' ),
-			]
-		) );
-
-		$advanced_options->add_field( array(
-			'name'    => __( 'Enable' ) . ' ' . cp_resources()->setup->post_types->speaker->plural_label,
-			'id'      => 'speaker_enabled',
-			'type'    => 'radio_inline',
-			'default' => 1,
-			'options' => [
-				1 => __( 'Enable', 'cp-resources' ),
-				0 => __( 'Disable', 'cp-resources' ),
-			]
-		) );
-
-		$advanced_options->add_field( array(
-			'name'    => __( 'Enable' ) . ' ' . cp_resources()->setup->post_types->service_type->plural_label,
-			'id'      => 'service_type_enabled',
-			'type'    => 'radio_inline',
-			'default' => 0,
-			'options' => [
-				1 => __( 'Enable', 'cp-resources' ),
-				0 => __( 'Disable', 'cp-resources' ),
-			]
-		) );
-
-		$advanced_options->add_field( array(
-			'name'    => __( 'Enable Podcast Feed' ),
-			'id'      => 'podcast_feed_enable',
-			'type'    => 'radio_inline',
-			'default' => 0,
 			'options' => [
 				1 => __( 'Enable', 'cp-resources' ),
 				0 => __( 'Disable', 'cp-resources' ),
