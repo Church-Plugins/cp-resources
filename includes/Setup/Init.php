@@ -110,15 +110,33 @@ class Init {
 		}
 	}
 
+	/**
+	 * Handle the default resources output.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param $content
+	 *
+	 * @return mixed|string
+	 * @author Tanner Moushey, 6/19/23
+	 */
 	public function output_resources( $content ) {
-		$resource_objects = Settings::get( 'has_resources' );
+		$resource_objects = Settings::get( 'has_resources', [] );
 
-		if ( ! is_singular( $resource_objects ) ) {
+		// don't output if we aren't dealing with the right post type
+		if ( ! in_array( get_post_type(), $resource_objects ) ) {
 			return $content;
 		}
 
-		if ( get_the_ID() != get_queried_object_id() ) {
-			return $content;
+		// allow short-circuit of object check.
+		if ( apply_filters( 'cp_resources_output_resources_check_object', true ) ) {
+			if ( ! is_singular( $resource_objects ) ) {
+				return $content;
+			}
+
+			if ( get_the_ID() != get_queried_object_id() ) {
+				return $content;
+			}
 		}
 
 		$post_type = get_post_type();

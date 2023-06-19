@@ -63,7 +63,7 @@ class Shortcode
 			$args['id'] = get_the_ID();
 		}
 
-		$resource_objects = Settings::get( 'resource_objects', [] );
+		$resource_objects = Settings::get( 'has_resources', [] );
 		if ( ! in_array( get_post_type( $args['id'] ), $resource_objects ) ) {
 			return '';
 		}
