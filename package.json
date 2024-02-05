@@ -8,10 +8,6 @@
     "start": "wpackio-scripts start",
     "archive": "wpackio-scripts pack"
   },
-  "devDependencies": {
-    "@wpackio/scripts": "^6.4.0",
-    "sass": "^1.42.1"
-  },
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
@@ -20,6 +16,7 @@
     "@mui/styled-engine-sc": "^5.0.0",
     "@mui/styles": "^5.0.1",
     "@wpackio/entrypoint": "^6.4.0",
+    "@wpackio/scripts": "^6.4.0",
     "axios": "^0.21.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
