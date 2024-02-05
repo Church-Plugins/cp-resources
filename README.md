@@ -19,5 +19,9 @@ npm run build
 
 ### Change Log
 
+#### 1.0.1
+* Feature: Add setting to disable resource archive page.
+* Bug fix: On resource search results, use resource URL as link instead of resource permalink.
+
 #### 1.0.0
 * Initial release
