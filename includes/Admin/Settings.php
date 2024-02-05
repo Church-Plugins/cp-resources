@@ -122,6 +122,19 @@ class Settings {
 			'options' => $objects,
 		) );
 
+		$main_options->add_field( array(
+			'name'    => __( 'Archive page', 'cp-resources' ),
+			'id'      => 'archive_enabled',
+			'type'    => 'radio_inline',
+			/* translators: %s: plural label for resources */
+			'desc'    => sprintf( __( 'Whether or not to allow a %s archive page.', 'cp-resources' ), strtolower( cp_resources()->setup->post_types->resource->plural_label ) ),
+			'options' => array(
+				1 => __( 'Enable', 'cp-resources' ),
+				0 => __( 'Disable', 'cp-resources' ),
+			),
+			'default' => 1,
+		) );
+
 		// handle display settings for each Object with Resources
 		$has_resources = self::get( 'has_resources', [] );
 		$display_options = apply_filters( 'cp_resources_settings_display_options', [
