@@ -3,7 +3,7 @@
  * Plugin Name: CP Resources
  * Plugin URL: https://churchplugins.com
  * Description: Church resources plugin
- * Version: 0.1.0
+ * Version: 1.0.1
  * Author: Church Plugins
  * Author URI: https://churchplugins.com
  * Text Domain: cp-resources
@@ -12,7 +12,7 @@
 
 if( !defined( 'CP_RESOURCES_PLUGIN_VERSION' ) ) {
 	 define ( 'CP_RESOURCES_PLUGIN_VERSION',
-	 	'0.1.0'
+	 	'1.0.1'
 	);
 }
 
