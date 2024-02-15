@@ -150,6 +150,7 @@ class Init {
 	public function app_enqueue() {
 		$this->enqueue->enqueue( 'styles', 'main', [] );
 		$this->enqueue->enqueue( 'scripts', 'main', [ 'js_dep' => ['jquery'] ] );
+		wp_enqueue_style( 'material-icons' );
 	}
 
 	/**
