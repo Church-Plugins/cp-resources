@@ -149,7 +149,7 @@ class Init {
 	 */
 	public function app_enqueue() {
 		$this->enqueue->enqueue( 'styles', 'main', [] );
-		$this->enqueue->enqueue( 'scripts', 'main', [ 'js_dep' => ['jquery'] ] );
+		$this->enqueue->enqueue( 'scripts', 'main', [ 'js_dep' => [ 'jquery' ] ] );
 		wp_enqueue_style( 'material-icons' );
 	}
 
@@ -159,7 +159,7 @@ class Init {
 	 * @return void
 	 */
 	public function required_plugins() {
-		printf( '<div class="error"><p>%s</p></div>', __( 'Your system does not meet the requirements for CP Resources', 'cp-resources' ) );
+		printf( '<div class="error"><p>%s</p></div>', esc_html__( 'Your system does not meet the requirements for CP Resources', 'cp-resources' ) );
 	}
 
 
