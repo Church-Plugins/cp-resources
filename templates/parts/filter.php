@@ -25,14 +25,6 @@ $display = apply_filters( 'cpl_filters_display', $display );
 		<?php endif; ?>
 
 		<?php
-		foreach ( $taxonomies as $tax ) {
-			\ChurchPlugins\Facets\Taxonomy::display_facet( [
-				'taxonomy' => $tax->taxonomy
-			] );
-		}
-		?>
-
-		<?php /*
 		foreach ( $taxonomies as $tax ) :
 			$terms = get_terms( [ 'taxonomy' => $tax->taxonomy, 'hide_empty' => true ] );
 
@@ -63,7 +55,7 @@ $display = apply_filters( 'cpl_filters_display', $display );
 					<?php endforeach; ?>
 				</div>
 			</div>
-		<?php endforeach;*/ ?>
+		<?php endforeach;?>
 
 		<div class="cp-resources-filter--search">
 			<div class="cp-resources-filter--search--box">
