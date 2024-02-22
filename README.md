@@ -21,6 +21,7 @@ npm run build
 
 #### 1.0.1
 * Feature: Add setting to disable resource archive page.
+* Feature: Allow creating custom resource topics when CP Library is not also installed.
 * Bug fix: On resource search results, use resource URL as link instead of resource permalink.
 
 #### 1.0.0
