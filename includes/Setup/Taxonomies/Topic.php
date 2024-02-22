@@ -70,17 +70,23 @@ class Topic extends Taxonomy  {
 	 *
 	 * @return array
 	 * @since  1.0.0
+	 * @updated 1.0.1 - Only get default data if CP Library is also installed.
 	 *
 	 * @author Tanner Moushey
 	 */
 	public function get_term_data() {
-		$topics_file = cp_resources()->templates->get_template_hierarchy( '__data/topics.json' );
+		$terms = [];
 
-		if ( ! $topics_file ) {
-			return [];
+		if ( function_exists( 'cp_library' ) ) {
+			$topics_file = cp_resources()->templates->get_template_hierarchy( '__data/topics.json' );
+			if ( $topics_file ) {
+				$terms = json_decode( file_get_contents( $topics_file ) );
+			}
+		} else {
+			$terms = get_terms( [ 'taxonomy' => $this->taxonomy, 'hide_empty' => false ] );
 		}
 
-		return apply_filters( "{$this->taxonomy}_get_term_data", json_decode( file_get_contents( $topics_file ) ) );
+		return apply_filters( "{$this->taxonomy}_get_term_data", $terms );
 	}
 
 }
