@@ -187,6 +187,10 @@ class Resource extends PostType  {
 		$args              = parent::get_args();
 		$args['menu_icon'] = apply_filters( "{$this->post_type}_icon", 'dashicons-book' );
 
+		if ( ! Settings::get( 'archive_enabled', false ) ) {
+			$args['has_archive'] = false;
+		}
+
 		return $args;
 	}
 
