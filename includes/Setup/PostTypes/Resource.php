@@ -220,7 +220,7 @@ class Resource extends PostType  {
 	 *
 	 * @param string   $permalink The current permalink.
 	 * @param \WP_Post $post The post object.
-	 * @since 1.1.0
+	 * @since 1.0.1
 	 */
 	public function use_resource_as_permalink( $permalink, $post ) {
 		if ( is_admin() ) {
