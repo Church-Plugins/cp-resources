@@ -48,6 +48,23 @@ class Topic extends Taxonomy  {
 	}
 
 	/**
+	 * Get taxonomy args.
+	 *
+	 * @return array Taxonomy args.
+	 * @since  1.0.1
+	 */
+	public function get_args() {
+		$args = parent::get_args();
+
+		// make taxonomy editable if we aren't using CP Library
+		if ( ! function_exists( 'cp_library' ) ) {
+			$args['show_ui'] = true;
+		}
+
+		return $args;
+	}
+
+	/**
 	 * A key value array of term data "esc_attr( Name )" : "Name"
 	 * @return array
 	 * @since  1.0.0
@@ -70,17 +87,23 @@ class Topic extends Taxonomy  {
 	 *
 	 * @return array
 	 * @since  1.0.0
+	 * @updated 1.0.1 - Only get default data if CP Library is also installed.
 	 *
 	 * @author Tanner Moushey
 	 */
 	public function get_term_data() {
-		$topics_file = cp_resources()->templates->get_template_hierarchy( '__data/topics.json' );
+		$terms = [];
 
-		if ( ! $topics_file ) {
-			return [];
+		if ( function_exists( 'cp_library' ) ) {
+			$topics_file = \CP_Library\Templates::get_template_hierarchy( '__data/topics.json' );
+			if ( $topics_file && file_exists( $topics_file ) ) {
+				$terms = json_decode( file_get_contents( $topics_file ) );
+			}
+		} else {
+			$terms = get_terms( [ 'taxonomy' => $this->taxonomy, 'hide_empty' => false ] );
 		}
 
-		return apply_filters( "{$this->taxonomy}_get_term_data", json_decode( file_get_contents( $topics_file ) ) );
+		return apply_filters( "{$this->taxonomy}_get_term_data", $terms );
 	}
 
 }
