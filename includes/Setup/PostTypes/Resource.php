@@ -113,6 +113,11 @@ class Resource extends PostType  {
 			'terms'    => cp_resources()->setup->taxonomies->type->get_visible_types(),
 		];
 
+		$items_per_page = Settings::get( 'items_per_page', 12 );
+		$items_per_page = absint( $items_per_page );
+
+		$query->set( 'posts_per_page', $items_per_page );
+
 		$query->set( 'tax_query', $tax_query );
 	}
 

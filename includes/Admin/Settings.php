@@ -135,6 +135,20 @@ class Settings {
 			'default' => 1,
 		) );
 
+		$main_options->add_field( array(
+			'name'    => __( 'Items per page', 'cp-resources' ),
+			'id'      => 'items_per_page',
+			'type'    => 'text',
+			'desc'    => __( 'How many results to show per page on the archive page.', 'cp-resources' ),
+			'default' => 12,
+			'attributes' => array(
+				'min'  => 1,
+				'max'  => 100,
+				'step' => 1,
+				'type' => 'number'
+			),
+		) );
+
 		// handle display settings for each Object with Resources
 		$has_resources = self::get( 'has_resources', [] );
 		$display_options = apply_filters( 'cp_resources_settings_display_options', [
