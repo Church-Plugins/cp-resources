@@ -51,7 +51,7 @@ class Topic extends Taxonomy  {
 	 * Get taxonomy args.
 	 *
 	 * @return array Taxonomy args.
-	 * @since  1.0.1
+	 * @since  1.0.6
 	 */
 	public function get_args() {
 		$args = parent::get_args();
@@ -87,7 +87,7 @@ class Topic extends Taxonomy  {
 	 *
 	 * @return array
 	 * @since  1.0.0
-	 * @updated 1.0.1 - Only get default data if CP Library is also installed.
+	 * @updated 1.0.6 - Only get default data if CP Library is also installed.
 	 *
 	 * @author Tanner Moushey
 	 */

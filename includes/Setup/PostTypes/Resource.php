@@ -82,13 +82,13 @@ class Resource extends PostType  {
 	}
 
 	/**
-	 *
-	 *
-	 * @since  1.0.5
-	 *
-	 * @param $query \WP_Query
+	 * Customize the resource query.
 	 *
 	 * @author Tanner Moushey, 5/22/23
+	 *
+	 * @param \WP_Query $query The query object.
+	 * @since 1.0.5
+	 * @updated 1.0.6 - Set posts_per page_based on plugin setting.
 	 */
 	public function archive_query( $query ) {
 		if ( is_admin() ) {
@@ -113,10 +113,11 @@ class Resource extends PostType  {
 			'terms'    => cp_resources()->setup->taxonomies->type->get_visible_types(),
 		];
 
-		$items_per_page = Settings::get( 'items_per_page', 12 );
-		$items_per_page = absint( $items_per_page );
-
-		$query->set( 'posts_per_page', $items_per_page );
+		if ( $query->is_main_query() ) {
+			$items_per_page = Settings::get( 'items_per_page', 12 );
+			$items_per_page = absint( $items_per_page );
+			$query->set( 'posts_per_page', $items_per_page );
+		}
 
 		$query->set( 'tax_query', $tax_query );
 	}
@@ -229,7 +230,7 @@ class Resource extends PostType  {
 	 *
 	 * @param string   $permalink The current permalink.
 	 * @param \WP_Post $post The post object.
-	 * @since 1.0.1
+	 * @since 1.0.6
 	 */
 	public function use_resource_as_permalink( $permalink, $post ) {
 		if ( is_admin() ) {
