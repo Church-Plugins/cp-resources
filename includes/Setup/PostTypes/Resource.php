@@ -241,7 +241,9 @@ class Resource extends PostType  {
 			return $permalink;
 		}
 
-		$url = get_post_meta( $post->ID, 'resource_url', true );
+		$resource = \CP_Resources\Models\Resource::get_instance_from_origin( $post->ID );
+
+		$url = $resource->get_meta_value( 'resource_url' );
 
 		if ( ! empty( $url ) ) {
 			return $url;
