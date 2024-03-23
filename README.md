@@ -19,5 +19,10 @@ npm run build
 
 ### Change Log
 
+#### 1.0.6
+* Feature: Add setting to disable resource archive page.
+* Feature: Allow creating custom resource topics when CP Library is not also installed.
+* Bug fix: On resource search results, use resource URL as link instead of resource permalink.
+
 #### 1.0.0
 * Initial release
