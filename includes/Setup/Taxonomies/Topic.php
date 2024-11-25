@@ -95,7 +95,14 @@ class Topic extends Taxonomy  {
 		$terms = [];
 
 		if ( function_exists( 'cp_library' ) ) {
-			$topics_file = \CP_Library\Templates::get_template_hierarchy( '__data/topics.json' );
+			if ( version_compare( CP_LIBRARY_PLUGIN_VERSION, '1.5.1', '<' ) ) {
+				/** @var string $topics_file */
+				$topics_file = \CP_Library\Templates::get_template_hierarchy( '__data/topics.json' );
+			} else {
+					/** @var string $topics_file */
+				$topics_file = \CP_Library\Templates::get_instance()->get_template_hierarchy( '__data/topics.json' );
+			}
+
 			if ( $topics_file && file_exists( $topics_file ) ) {
 				$terms = json_decode( file_get_contents( $topics_file ) );
 			}
