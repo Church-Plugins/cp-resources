@@ -87,8 +87,7 @@ class Resource extends PostType  {
 	 * @author Tanner Moushey, 5/22/23
 	 *
 	 * @param \WP_Query $query The query object.
-	 * @since 1.0.5
-	 * @updated 1.0.6 - Set posts_per page_based on plugin setting.
+	 * @since 1.0.0
 	 */
 	public function archive_query( $query ) {
 		if ( is_admin() ) {
@@ -125,9 +124,7 @@ class Resource extends PostType  {
 	}
 
 	/**
-	 *
-	 *
-	 * @since  1.0.5
+	 * @since  1.0.0
 	 *
 	 * @param $query \WP_Query
 	 *
@@ -146,9 +143,7 @@ class Resource extends PostType  {
 	}
 
 	/**
-	 *
-	 *
-	 * @since  1.0.5
+	 * @since  1.0.0
 	 *
 	 * @param $query \WP_Query
 	 *
@@ -232,7 +227,7 @@ class Resource extends PostType  {
 	 *
 	 * @param string   $permalink The current permalink.
 	 * @param \WP_Post $post The post object.
-	 * @since 1.0.6
+	 * @since 
 	 */
 	public function use_resource_as_permalink( $permalink, $post ) {
 		if ( is_admin() ) {
