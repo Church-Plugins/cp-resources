@@ -45,19 +45,30 @@ class Shortcode
 	/**
 	 * Add the app's custom shortcodes to WP
 	 *
-	 * @param array $params
 	 * @return void
 	 * @author costmo
 	 */
 	public function add_shortcodes() {
 		add_shortcode( 'item-resources', [ $this, 'resource_cb' ] );
+		add_shortcode( 'cp-resources-archive', [ $this, 'archive_cb' ] );
+		add_shortcode( 'cp-resources-filters', [ $this, 'filters_cb' ] );
 	}
 
+	/**
+	 * Displays a resource
+	 *
+	 * @param array $atts Shortcode attributes
+	 * @return string
+	 */
 	public function resource_cb( $atts ) {
-		$args = shortcode_atts( [
-			'id' => 0,
-		], $atts, 'cp-resources' );
-
+		$args = shortcode_atts(
+			array(
+				// The ID of the resource to display (defaults to the current post)
+				'id' => 0,
+			),
+			$atts,
+			'item-resources'
+		);
 
 		if ( empty( $args['id'] ) ) {
 			$args['id'] = get_the_ID();
@@ -75,4 +86,47 @@ class Shortcode
 		return ob_get_clean();
 	}
 
+	/**
+	 * Displays the resource archive page.
+	 *
+	 * @param array $atts Shortcode attributes
+	 * @return string
+	 */
+	public function archive_cb( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'test' => 'test',
+			),
+			$atts,
+			'cp-resources-archive'
+		);
+
+		ob_start();
+
+		cp_resources()->templates->get_template_part( 'archive' );
+
+		return ob_get_clean();
+	}
+
+	/**
+	 * Displays the resource filters
+	 *
+	 * @param array $atts Shortcode attributes
+	 * @return string
+	 */
+	public function filters_cb( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'test' => 'test',
+			),
+			$atts,
+			'cp-resources-filters'
+		);
+
+		ob_start();
+
+		cp_resources()->templates->get_template_part( 'parts/filter' );
+
+		return ob_get_clean();
+	}
 }
