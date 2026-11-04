@@ -310,7 +310,7 @@ ORDER BY %2$s.order ASC', $instance->table_name, $meta->table_name, $object_id )
 	/**
 	 * Update the object relationship for this Resource
 	 *
-	 * @since  1.0.5
+	 * @since  1.0.0
 	 *
 	 * @param $object_id
 	 * @param $order
@@ -355,7 +355,7 @@ ORDER BY %2$s.order ASC', $instance->table_name, $meta->table_name, $object_id )
 	/**
 	 * Delete the object relationship for this Resource
 	 *
-	 * @since  1.0.5
+	 * @since  1.0.0
 	 *
 	 * @param $object_id
 	 *

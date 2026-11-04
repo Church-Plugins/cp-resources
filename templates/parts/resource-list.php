@@ -14,7 +14,7 @@ $classes = apply_filters( 'cp_resources_resource_list_classes', [ 'cp-resources-
 <article class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 
 	<div class="cp-resources-list-resource--thumb">
-		<div class="cp-resources-list-resource--thumb--canvas" style="background: url(<?php echo esc_url( $resource->get_thumbnail() ); ?>) 0% 0% / cover;">
+		<div class="cp-resources-list-resource--thumb--canvas">
 			<?php if ( $resource->get_thumbnail() ) : ?>
 				<img alt="<?php esc_attr( $resource->get_title() ); ?>" src="<?php echo esc_url( $resource->get_thumbnail() ); ?>">
 			<?php endif; ?>
