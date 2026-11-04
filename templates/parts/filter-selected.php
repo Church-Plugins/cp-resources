@@ -6,9 +6,9 @@ $uri = explode( '?', $_SERVER['REQUEST_URI'] )[0];
 $get = $_GET;
 ?>
 <div class="cp-resources-filter--filters">
-	<?php if ( ! empty( $_GET['s'] ) ) : unset( $get[ 's' ] ); ?>
-		<a href="<?php echo esc_url( add_query_arg( $get, $uri ) ); ?>" class="cp-resources-filter--filters--filter"><?php echo __( 'Search:' ) . ' ' . Helpers::get_request('s' ); ?></a>
-	<?php endif; ?>
+	<?php foreach ( [ 'search', 's' ] as $search_key ) : if ( empty( $_GET[ $search_key ] ) ) continue; $search_get = $get; unset( $search_get[ $search_key ] ); ?>
+		<a href="<?php echo esc_url( add_query_arg( $search_get, $uri ) ); ?>" class="cp-resources-filter--filters--filter"><?php echo esc_html( __( 'Search:' ) . ' ' . Helpers::get_request( $search_key ) ); ?></a>
+	<?php endforeach; ?>
 
 	<?php foreach ( $taxonomies as $tax ) : if ( empty( $_GET[ $tax->taxonomy ] ) ) continue; ?>
 		<?php foreach( $_GET[ $tax->taxonomy ] as $slug ) :
