@@ -104,6 +104,11 @@ class Resource extends PostType  {
 		$query->set( 'post_type', $resource_objects );
 		$query->set( 'is_resource_query', true );
 
+		// The filter form submits `search` instead of `s` so shortcode pages aren't hijacked by core search.
+		if ( $query->is_main_query() && ! empty( $_GET['search'] ) ) {
+			$query->set( 's', sanitize_text_field( wp_unslash( $_GET['search'] ) ) );
+		}
+
 		// Add tax query to include only those taxonomies that should be shown in the archive
 		$tax_query = $query->get( 'tax_query', [] );
 
